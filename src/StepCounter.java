@@ -33,12 +33,14 @@ public class StepCounter {
 
 	/***
 	 * Calculates the threshold to use to count steps
-	 * @param arr an array with magnitudes
+	 * 
+	 * @param arr
+	 *            an array with magnitudes
 	 * @return the threshold
 	 */
 	public static double calculateThreshold(double[] arr) {
 		double mean = calculateMean(arr);
-		return mean + calculateStandardDeviation(arr, mean);
+		return mean + 2 * calculateStandardDeviation(arr, mean);
 
 	}
 
