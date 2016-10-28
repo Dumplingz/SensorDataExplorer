@@ -40,7 +40,7 @@ public class StepCounter {
 	 */
 	public static double calculateThreshold(double[] arr) {
 		double mean = calculateMean(arr);
-		return mean + 2 * calculateStandardDeviation(arr, mean);
+		return mean + calculateStandardDeviation(arr, mean);
 
 	}
 

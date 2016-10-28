@@ -8,30 +8,31 @@ public class BasicPlotting {
 	public static String videofile = "data/walkingSampleData.mp4";
 
 	public static void main(String[] args) {
-		String[] columnNames = { "time", "xg", "yg", "zg", "g" };
-		CSVData data = CSVData.readCSVFile("data/walkingSampleData-out.csv", columnNames, 1);
+		String[] columnNames = { "time", "xg", "yg", "zg" };
+		CSVData data = CSVData.readCSVFile("data/64StepsInPocketJogging-out.csv", 1);
 
-		double[][] sample1 = data.getColumns(new String[] { "xg", "yg", "zg" });
-		double[][] sample2 = data.getColumns(new String[] { "time", "xg", "yg", "zg" });
+		double[][] sample1 = data.getColumns(new String[] { "  gryo x","  gyro y","  gyro z" });
 
-		StepCounter.replaceAbsoluteTime(sample2);
+		
 
-		double[] time = ArrayHelper.extractColumn(sample2, 0);
-		double[] magnitudes = StepCounter.calculateMagnitudesFor(sample1);
-		double threshold = StepCounter.calculateThreshold(magnitudes);
-		double[] thresholds = new double[magnitudes.length];
-		for (int i = 0; i < thresholds.length; i++) {
-			thresholds[i] = threshold;
-		}
+		double[] time = data.getColumn(0);
+		//double[] magnitudes = StepCounter.calculateMagnitudesFor(sample1);
+		//double threshold = StepCounter.calculateThreshold(magnitudes);
+		//double[] thresholds = new double[magnitudes.length];
+//		for (int i = 0; i < thresholds.length; i++) {
+//			thresholds[i] = threshold;
+//		}
 
-		double[][] graph = ArrayHelper.combineAsColumns(time, magnitudes, thresholds);
+		//double[][] graph = ArrayHelper.combineAsColumns(time, magnitudes, thresholds);
 		System.out.println(StepCounter.countSteps(sample1));
 		
 		Plot2DPanel plot = new Plot2DPanel();
 
 		// add a line plot to the PlotPanel
-		plot.addLinePlot("Magnitudes", magnitudes);
-		plot.addLinePlot("Threshold", thresholds);
+//		plot.addLinePlot("Magnitudes", ArrayHelper.extractColumn(sample1, 0));
+//		plot.addLinePlot("Magnitudes", ArrayHelper.extractColumn(sample1, 1));
+		plot.addLinePlot("Magnitudes", ArrayHelper.extractColumn(sample1, 2));
+		//plot.addLinePlot("Threshold", thresholds);
 
 		// put the PlotPanel in a JFrame, as a JPanel
 		JFrame frame = new JFrame("Results");
