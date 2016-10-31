@@ -30,6 +30,10 @@ public class StepCounter {
 		}
 		return timesPassedStandardDeviation * 2;
 	}
+	
+	public static int getGyroSteps(){
+		return 0;
+	}
 
 	/***
 	 * Calculates the threshold to use to count steps
