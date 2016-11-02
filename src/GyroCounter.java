@@ -1,14 +1,5 @@
 
-public class StepCounter {
-
-	/***
-	 * An object that assists in counting the number of steps given a set of
-	 * data.
-	 */
-	public StepCounter() {
-
-	}
-
+public class GyroCounter {
 	/***
 	 * Finds, using standard deviation, the number of steps walked given (x,y,z)
 	 * vectors of acceleration.
@@ -17,18 +8,18 @@ public class StepCounter {
 	 *            the array containing the (x,y,z) components of acceleration
 	 * @return the number of steps walked
 	 */
-	public static int countSteps(double[][] sensorData) {
-		double[] magnitudes = calculateMagnitudesFor(sensorData);
+	public static int countSteps(double[][] gyroData) {
+		double[] xGyroData = ArrayHelper.extractColumn(gyroData, 0);
 		int timesPassedStandardDeviation = 0;
-		double stepThreshold = calculateThreshold(magnitudes);
-		for (int i = 0; i < magnitudes.length - 1; i++) {
-			double firstValue = magnitudes[i];
-			double secondValue = magnitudes[i + 1];
+		double stepThreshold = calculateThreshold(xGyroData);
+		for (int i = 0; i < xGyroData.length - 1; i++) {
+			double firstValue = xGyroData[i];
+			double secondValue = xGyroData[i + 1];
 			if (firstValue < secondValue && firstValue < stepThreshold && secondValue > stepThreshold) {
 				timesPassedStandardDeviation++;
 			}
 		}
-		return timesPassedStandardDeviation * 2;
+		return timesPassedStandardDeviation;
 	}
 
 	/***
