@@ -9,7 +9,7 @@ public class BasicPlotting {
 
 	public static void main(String[] args) {
 		String[] columnNames = { "time", "xg", "yg", "zg" };
-		CSVData data = CSVData.readCSVFile("data/64StepsInPocketJogging-out.csv", 1);
+		CSVData data = CSVData.readCSVFile("data/walkingSampleData-out.csv", 1);
 
 		double[][] sample1 = data.getColumns(new String[] { "  gryo x", "  gyro y", "  gyro z" });
 
