@@ -89,7 +89,7 @@ public class StepCounter {
 	 *            the mean of the array inputted
 	 * @return the standard deviation
 	 */
-	private static double calculateStandardDeviation(double[] arr, double mean) {
+	public static double calculateStandardDeviation(double[] arr, double mean) {
 		double value = 0;
 		for (int i = 0; i < arr.length; i++) {
 			value += (arr[i] - mean) * (arr[i] - mean);
@@ -106,7 +106,7 @@ public class StepCounter {
 	 *            the array of doubles to find the mean
 	 * @return Calculates the mean of an array of doubles
 	 */
-	private static double calculateMean(double[] arr) {
+	public static double calculateMean(double[] arr) {
 		double total = 0;
 		for (int i = 0; i < arr.length; i++) {
 			total += arr[i];
