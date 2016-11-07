@@ -49,8 +49,8 @@ public class Sectioning {
 			double Threshold = StepCounter.calculateThreshold(arr);	
 			if(Threshold > arr[i+1] && maxThreshold < arr[i+1] && Threshold > arr[i] && maxThreshold < arr[i] && Threshold > arr[((int)(n/2))-i] && maxThreshold < arr[((int)(n/2))-i]){
 				double[] NewSection = new double[n];
-				NewSection[i] = 
-				return NewSection;
+		//		NewSection[i] = 
+		//		return NewSection;
 			}
 		}
 		}
@@ -100,13 +100,16 @@ public class Sectioning {
 	/***
 	 * If next few peaks are less then SD min and max, create new SD min ans max
 	 * of the few peaks
+	 * @return new Threshold of data section of n
 	 */
-	public static void NextSD(double[][] sensorData, int n) {
+	public static double NextSD(double[][] sensorData, int n) {
 		double[] arr = NSectionsByThresholds(sensorData,n);
+		double Threshold = arr[0];
 		for(int i = 0; i < (int)(sensorData.length/n); i++){
 			if(arr[i] < (arr[i+1])*2 || arr[i] > (arr[i+1])*2){
-				
+				Threshold = arr[i+1];
 			}
 		}
+		return Threshold;
 	}
 }
