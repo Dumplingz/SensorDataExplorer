@@ -14,7 +14,7 @@ public class Plotting {
 
 		double[] time = data.getColumn(0);
 		double[] zGyroData = ArrayHelper.extractColumn(sample1, 2);
-		double threshold = StepCounter.calculateThreshold(zGyroData);
+		double threshold = StepCounter.calculateThreshold(zGyroData, true);
 		double[] thresholds = new double[zGyroData.length];
 		for (int i = 0; i < thresholds.length; i++) {
 			thresholds[i] = threshold;

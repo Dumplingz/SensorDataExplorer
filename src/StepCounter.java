@@ -20,7 +20,7 @@ public class StepCounter {
 	public static int countSteps(double[][] sensorData) {
 		double[] magnitudes = calculateMagnitudesFor(sensorData);
 		int timesPassedStandardDeviation = 0;
-		double stepThreshold = calculateThreshold(magnitudes);
+		double stepThreshold = calculateThreshold(magnitudes, true);
 		for (int i = 0; i < magnitudes.length - 1; i++) {
 			double firstValue = magnitudes[i];
 			double secondValue = magnitudes[i + 1];
@@ -38,9 +38,15 @@ public class StepCounter {
 	 *            an array with magnitudes
 	 * @return the threshold
 	 */
-	public static double calculateThreshold(double[] arr) {
+	public static double calculateThreshold(double[] arr, boolean add) {
+		double factor;
+		if (add) {
+			factor = 1;
+		} else {
+			factor = -1;
+		}
 		double mean = calculateMean(arr);
-		return mean + calculateStandardDeviation(arr, mean);
+		return mean + (factor * calculateStandardDeviation(arr, mean));
 
 	}
 

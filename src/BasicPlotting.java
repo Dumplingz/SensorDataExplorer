@@ -4,18 +4,16 @@ import javax.swing.JFrame;
 import org.math.plot.Plot2DPanel;
 
 public class BasicPlotting {
-	public static String datafile = "data/walkingSampleData-out.csv";
-	public static String videofile = "data/walkingSampleData.mp4";
+	public static String datafile = "data/Trial8.csv";
 
 	public static void main(String[] args) {
-		String[] columnNames = { "time", "xg", "yg", "zg" };
-		CSVData data = CSVData.readCSVFile("data/64StepsInPocketJogging-out.csv", 1);
+		CSVData data = CSVData.readCSVFile(datafile, 1);
 
-		double[][] sample1 = data.getColumns(new String[] { "  gryo x", "  gyro y", "  gyro z" });
+		double[][] sample1 = data.getColumns(new String[] { "gyroRotationX", "gyroRotationY", "gyroRotationZ" });
 
 		double[] time = data.getColumn(0);
 		double[] xGyroData = ArrayHelper.extractColumn(sample1, 2);
-		double threshold = StepCounter.calculateThreshold(xGyroData);
+		double threshold = StepCounter.calculateThreshold(xGyroData, false);
 		double[] thresholds = new double[xGyroData.length];
 		for (int i = 0; i < thresholds.length; i++) {
 			thresholds[i] = threshold;
