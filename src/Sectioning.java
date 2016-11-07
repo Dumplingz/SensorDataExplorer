@@ -30,46 +30,15 @@ public class Sectioning {
 		}
 		return peakValues;
 	}
-
+	/***
+	 * Use max to identify the highest threshold to define the point as a section
+	 * @param arr
+	 * @return the ThresholdMax
+	 */
 	public static double calculateThresholdMax(double[] arr) {
 		double mean = StepCounter.calculateMean(arr);
 		return mean + (StepCounter.calculateStandardDeviation(arr, mean) * 2);
 
-	}
-
-	/***
-	 * @param Take in data double arr[][]
-	 * Identify two SD (min and max)
-	 */
-	public static double[] TakeofPartsData(double[][] sensorData, int n){
-		double[] arr = IdentifyPeaks(sensorData);
-		double maxThreshold = calculateThresholdMax(arr);
-		for(int j = 0; j < arr.length; j++){
-		for(int i = 0; i < (int)(n/2); i++){
-			double Threshold = StepCounter.calculateThreshold(arr);	
-			if(Threshold > arr[i+1] && maxThreshold < arr[i+1] && Threshold > arr[i] && maxThreshold < arr[i] && Threshold > arr[((int)(n/2))-i] && maxThreshold < arr[((int)(n/2))-i]){
-				double[] NewSection = new double[n];
-		//		NewSection[i] = 
-		//		return NewSection;
-			}
-		}
-		}
- 		return null;
-	}
-
-	public static double[] getStillSections(double[][] sensorData, int n){
-		//double leftvalue;
-		//leftvalue = rightvalue(peaksection)
-		double[] arr = NSectionsByThresholds(sensorData, n);
-		for(int i = 0; i < arr.length - 1; i++){
-			if(arr[i] > arr[i++]*2 || arr[i] < arr[i++]*2){
-				/**
-				 * TODO delete complete identifying sections in this area
-				 * https://github.com/Dumplingz/SensorDataExplorer.git
-				 */
-			}
-		}
-		return arr;
 	}
 
 	/**
@@ -78,38 +47,91 @@ public class Sectioning {
 	 *  Identify threshold per section and save different thresholds 
 	 * @param sensorData
 	 * @param n
-	 * @return
+	 * @return array of ThresholdByNSections
 	 */
 	public static double[] NSectionsByThresholds(double[][] sensorData, int n) {
-
+		int CopyOfN = n;
 		double[] arr = IdentifyPeaks(sensorData);
 		double[] ThresholdByNSections = new double[(int)(arr.length/n)];
+		double[] ArrayWithinArrayOfNParts = new double[arr.length];
 		double[] newArr = new double[n];
 		int j = 0;
 		for (int i = 0; i < arr.length - n; i = i + n) {
 			for(int h = 0; h < n; h++){
 			newArr[h] = arr[i+h];
 			}
+			ArrayWithinArrayOfNParts[i] = newArr[CopyOfN];
+			CopyOfN = n*2;
 			double Threshold = StepCounter.calculateThreshold(newArr);
 			ThresholdByNSections[j] = Threshold;
 			j++;
 		}
-		return ThresholdByNSections;
+		return ArrayWithinArrayOfNParts;
 	}
 
 	/***
 	 * If next few peaks are less then SD min and max, create new SD min ans max
 	 * of the few peaks
+	 * @param sensorData
+	 * @param n
 	 * @return new Threshold of data section of n
 	 */
-	public static double NextSD(double[][] sensorData, int n) {
+	public static boolean NextSD(double[][] sensorData, int n) {
 		double[] arr = NSectionsByThresholds(sensorData,n);
 		double Threshold = arr[0];
 		for(int i = 0; i < (int)(sensorData.length/n); i++){
 			if(arr[i] < (arr[i+1])*2 || arr[i] > (arr[i+1])*2){
 				Threshold = arr[i+1];
+				  
+				return true;
 			}
 		}
-		return Threshold;
+		return false;
 	}
+	/***
+	 * copy form StepCounter for reference
+	 * @param sensorData
+	 * @return
+	 */
+	public static int countSteps(double[][] sensorData) {
+		double[] magnitudes = StepCounter.calculateMagnitudesFor(sensorData);
+		int timesPassedStandardDeviation = 0;
+		double stepThreshold = StepCounter.calculateThreshold(magnitudes);
+		for (int i = 0; i < magnitudes.length - 1; i++) {
+			double firstValue = magnitudes[i];
+			double secondValue = magnitudes[i + 1];
+			if (firstValue < secondValue && firstValue < stepThreshold && secondValue > stepThreshold) {
+				timesPassedStandardDeviation++;
+			}
+		}
+		return timesPassedStandardDeviation * 2;
+	}
+	/***
+	 * Count Steps using the newArr of Sections
+	 * @param sensorData
+	 * @param n
+	 * @return number of steps
+	 */
+	public static int CountsStepsOfSections(double[][] sensorData, int n){
+		double[] IdentifyPeaks = IdentifyPeaks(sensorData);
+		double[] newArr = new double[n];
+		double[] magnitudes = StepCounter.calculateMagnitudesFor(sensorData);
+		int StepsCounted = 0;
+		double[] NSectionsByThresholds = NSectionsByThresholds(sensorData,n);
+		
+		for(int a = 0; a <magnitudes.length - 1; a++ ){
+			if(NextSD(sensorData, n) == true){
+				// for-loop > identify array of the n parts (create its new array; must put in its own method)
+				//NSectionsByThresholds method vvvv
+				for (int i = 0; i < NSectionsByThresholds.length - n; i = i + n) {
+					for(int h = 0; h < n; h++){
+					newArr[h] = NSectionsByThresholds[i+h];
+					double Threshold = StepCounter.calculateThreshold(newArr);
+					
+					}	
+			}
+		}
+	}
+		return StepsCounted;
+}
 }
