@@ -57,44 +57,56 @@ public class Sectioning {
  		return null;
 	}
 
-	public static double[] getStillSections(){
-		double leftvalue;
-		leftvalue = rightvalue(peaksection)
-		
+	public static double[] getStillSections(double[][] sensorData, int n){
+		//double leftvalue;
+		//leftvalue = rightvalue(peaksection)
+		double[] arr = NSectionsByThresholds(sensorData, n);
+		for(int i = 0; i < arr.length - 1; i++){
+			if(arr[i] > arr[i++]*2 || arr[i] < arr[i++]*2){
+				/**
+				 * TODO delete complete identifying sections in this area
+				 * https://github.com/Dumplingz/SensorDataExplorer.git
+				 */
+			}
+		}
+		return arr;
 	}
 
 	/**
-	 * 
-	 * 
+	 * n = section window
+	 *  section data into n parts.
+	 *  Identify threshold per section and save different thresholds 
 	 * @param sensorData
 	 * @param n
 	 * @return
 	 */
 	public static double[] NSectionsByThresholds(double[][] sensorData, int n) {
-		/**
-		 * TODO delete 3 (int this method n = 3 FIX IT) section data into n
-		 * parts. Identify threshold per section and save different thresholds
-		 */
+
 		double[] arr = IdentifyPeaks(sensorData);
-		double[] ThresholdByN = new double[(int)(arr.length/3)];
+		double[] ThresholdByNSections = new double[(int)(arr.length/n)];
+		double[] newArr = new double[n];
 		int j = 0;
-		for (int i = 0; i < arr.length - 3; i = i + 3) {
-			double[] newArr = new double[3];
-			newArr[0] = arr[i];
-			newArr[1] = arr[i + 1];
-			newArr[2] = arr[i + 2];
+		for (int i = 0; i < arr.length - n; i = i + n) {
+			for(int h = 0; h < n; h++){
+			newArr[h] = arr[i+h];
+			}
 			double Threshold = StepCounter.calculateThreshold(newArr);
-			ThresholdByN[j] = Threshold;
+			ThresholdByNSections[j] = Threshold;
 			j++;
 		}
-		return newArr;
+		return ThresholdByNSections;
 	}
 
 	/***
 	 * If next few peaks are less then SD min and max, create new SD min ans max
 	 * of the few peaks
 	 */
-	public static void NextSD() {
-
+	public static void NextSD(double[][] sensorData, int n) {
+		double[] arr = NSectionsByThresholds(sensorData,n);
+		for(int i = 0; i < (int)(sensorData.length/n); i++){
+			if(arr[i] < (arr[i+1])*2 || arr[i] > (arr[i+1])*2){
+				
+			}
+		}
 	}
 }
