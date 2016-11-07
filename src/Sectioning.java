@@ -52,19 +52,14 @@ public class Sectioning {
 	public static double[] NSectionsByThresholds(double[][] sensorData, int n) {
 		int CopyOfN = n;
 		double[] arr = IdentifyPeaks(sensorData);
-		double[] ThresholdByNSections = new double[(int)(arr.length/n)];
 		double[] ArrayWithinArrayOfNParts = new double[arr.length];
 		double[] newArr = new double[n];
-		int j = 0;
 		for (int i = 0; i < arr.length - n; i = i + n) {
 			for(int h = 0; h < n; h++){
 			newArr[h] = arr[i+h];
 			}
 			ArrayWithinArrayOfNParts[i] = newArr[CopyOfN];
 			CopyOfN = n*2;
-			double Threshold = StepCounter.calculateThreshold(newArr);
-			ThresholdByNSections[j] = Threshold;
-			j++;
 		}
 		return ArrayWithinArrayOfNParts;
 	}
@@ -133,6 +128,7 @@ public class Sectioning {
 	 */
 	public static int CountsStepsOfSections(double[][] sensorData, int n){
 		int StepsCounted = 0;
+		NSectionsByThresholds(sensorData, n);
 		double[] magnitudes = StepCounter.calculateMagnitudesFor(sensorData);
 		double[] stepThreshold = CalculateThresholdOfNSections(sensorData, n);
 		for (int i = 0; i < magnitudes.length - 1; i++) {
