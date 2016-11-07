@@ -68,7 +68,22 @@ public class Sectioning {
 		}
 		return ArrayWithinArrayOfNParts;
 	}
-
+	
+	public static double[] CalculateThresholdOfNSections(double[][] sensorData, int n){
+		double[] arr = IdentifyPeaks(sensorData);
+		double[] ThresholdByNSections = new double[(int)(arr.length/n)];
+		double[] newArr = new double[n];
+		int j = 0;
+		for (int i = 0; i < arr.length - n; i = i + n) {
+			for(int h = 0; h < n; h++){
+			newArr[h] = arr[i+h];
+			}
+			double Threshold = StepCounter.calculateThreshold(newArr);
+			ThresholdByNSections[j] = Threshold;
+			j++;
+		}
+		return ThresholdByNSections;
+	}
 	/***
 	 * If next few peaks are less then SD min and max, create new SD min ans max
 	 * of the few peaks
@@ -77,7 +92,7 @@ public class Sectioning {
 	 * @return new Threshold of data section of n
 	 */
 	public static boolean NextSD(double[][] sensorData, int n) {
-		double[] arr = NSectionsByThresholds(sensorData,n);
+		double[] arr = CalculateThresholdOfNSections(sensorData,n);
 		double Threshold = arr[0];
 		for(int i = 0; i < (int)(sensorData.length/n); i++){
 			if(arr[i] < (arr[i+1])*2 || arr[i] > (arr[i+1])*2){
@@ -113,25 +128,7 @@ public class Sectioning {
 	 * @return number of steps
 	 */
 	public static int CountsStepsOfSections(double[][] sensorData, int n){
-		double[] IdentifyPeaks = IdentifyPeaks(sensorData);
-		double[] newArr = new double[n];
-		double[] magnitudes = StepCounter.calculateMagnitudesFor(sensorData);
 		int StepsCounted = 0;
-		double[] NSectionsByThresholds = NSectionsByThresholds(sensorData,n);
-		
-		for(int a = 0; a <magnitudes.length - 1; a++ ){
-			if(NextSD(sensorData, n) == true){
-				// for-loop > identify array of the n parts (create its new array; must put in its own method)
-				//NSectionsByThresholds method vvvv
-				for (int i = 0; i < NSectionsByThresholds.length - n; i = i + n) {
-					for(int h = 0; h < n; h++){
-					newArr[h] = NSectionsByThresholds[i+h];
-					double Threshold = StepCounter.calculateThreshold(newArr);
-					
-					}	
-			}
-		}
-	}
 		return StepsCounted;
 }
 }
