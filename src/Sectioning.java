@@ -128,7 +128,7 @@ public class Sectioning {
 	 */
 	public static int CountsStepsOfSections(double[][] sensorData, int n){
 		int StepsCounted = 0;
-		NSectionsByThresholds(sensorData, n);
+		double[] arr = NSectionsByThresholds(sensorData, n);
 		double[] magnitudes = StepCounter.calculateMagnitudesFor(sensorData);
 		double[] stepThreshold = CalculateThresholdOfNSections(sensorData, n);
 		for (int i = 0; i < magnitudes.length - 1; i++) {
