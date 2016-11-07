@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Sectioning {
-
+	public int n = 5;
 	/***
 	 * Create new double array with peaks
 	 * 
@@ -68,7 +68,12 @@ public class Sectioning {
 		}
 		return ArrayWithinArrayOfNParts;
 	}
-	
+	/***
+	 * CalculateThresholdOfNSections each individual
+	 * @param sensorData
+	 * @param n
+	 * @return ThresholdByNSections[]
+	 */
 	public static double[] CalculateThresholdOfNSections(double[][] sensorData, int n){
 		double[] arr = IdentifyPeaks(sensorData);
 		double[] ThresholdByNSections = new double[(int)(arr.length/n)];
@@ -96,8 +101,7 @@ public class Sectioning {
 		double Threshold = arr[0];
 		for(int i = 0; i < (int)(sensorData.length/n); i++){
 			if(arr[i] < (arr[i+1])*2 || arr[i] > (arr[i+1])*2){
-				Threshold = arr[i+1];
-				  
+				Threshold = arr[i+1];  
 				return true;
 			}
 		}
@@ -129,6 +133,18 @@ public class Sectioning {
 	 */
 	public static int CountsStepsOfSections(double[][] sensorData, int n){
 		int StepsCounted = 0;
+		double[] magnitudes = StepCounter.calculateMagnitudesFor(sensorData);
+		double[] stepThreshold = CalculateThresholdOfNSections(sensorData, n);
+		for (int i = 0; i < magnitudes.length - 1; i++) {
+			double firstValue = magnitudes[i];
+			double secondValue = magnitudes[i + 1];
+			if (firstValue < secondValue && firstValue < stepThreshold[] && secondValue > stepThreshold[]) {
+				StepsCounted++;
+			}
+		}
 		return StepsCounted;
 }
+	public static void EliminateSections(double[][] sensorData, int n){
+		// if close to mean value, eliminate section from being counted
+	}
 }
