@@ -36,6 +36,9 @@ public class StepCounter {
 	 * 
 	 * @param arr
 	 *            an array with magnitudes
+	 * @param add
+	 *            a boolean telling whether to add or subtract the standard
+	 *            deviation
 	 * @return the threshold
 	 */
 	public static double calculateThreshold(double[] arr, boolean add) {
