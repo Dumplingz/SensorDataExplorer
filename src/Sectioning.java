@@ -49,17 +49,17 @@ public class Sectioning {
 	 * @param n
 	 * @return array of ThresholdByNSections
 	 */
-	public static double[] NSectionsByThresholds(double[][] sensorData, int n) {
+	public static double[] NSectionsByArrayParts(double[][] sensorData, int n) {
 		int CopyOfN = n;
 		double[] arr = IdentifyPeaks(sensorData);
-		double[] ArrayWithinArrayOfNParts = new double[arr.length];
+		double[] ArrayWithinArrayOfNParts = new double[(int)(arr.length/n)];
 		double[] newArr = new double[n];
 		for (int i = 0; i < arr.length - n; i = i + n) {
 			for(int h = 0; h < n; h++){
 			newArr[h] = arr[i+h];
 			}
 			ArrayWithinArrayOfNParts[i] = newArr[CopyOfN];
-			CopyOfN = n*2;
+			CopyOfN = CopyOfN+n;
 		}
 		return ArrayWithinArrayOfNParts;
 	}
@@ -107,19 +107,19 @@ public class Sectioning {
 	 * @param sensorData
 	 * @return
 	 */
-	public static int countSteps(double[][] sensorData) {
-		double[] magnitudes = StepCounter.calculateMagnitudesFor(sensorData);
-		int timesPassedStandardDeviation = 0;
-		double stepThreshold = StepCounter.calculateThreshold(magnitudes);
-		for (int i = 0; i < magnitudes.length - 1; i++) {
-			double firstValue = magnitudes[i];
-			double secondValue = magnitudes[i + 1];
-			if (firstValue < secondValue && firstValue < stepThreshold && secondValue > stepThreshold) {
-				timesPassedStandardDeviation++;
-			}
-		}
-		return timesPassedStandardDeviation * 2;
-	}
+//	public static int countSteps(double[][] sensorData) {
+//		double[] magnitudes = StepCounter.calculateMagnitudesFor(sensorData);
+//		int timesPassedStandardDeviation = 0;
+//		double stepThreshold = StepCounter.calculateThreshold(magnitudes);
+//		for (int i = 0; i < magnitudes.length - 1; i++) {
+//			double firstValue = magnitudes[i];
+//			double secondValue = magnitudes[i + 1];
+//			if (firstValue < secondValue && firstValue < stepThreshold && secondValue > stepThreshold) {
+//				timesPassedStandardDeviation++;
+//			}
+//		}
+//		return timesPassedStandardDeviation * 2;
+//	}
 	/***
 	 * Count Steps using the newArr of Sections
 	 * @param sensorData
@@ -128,13 +128,14 @@ public class Sectioning {
 	 */
 	public static int CountsStepsOfSections(double[][] sensorData, int n){
 		int StepsCounted = 0;
-		double[] arr = NSectionsByThresholds(sensorData, n);
+		double[] arr = NSectionsByArrayParts(sensorData, n);
 		double[] magnitudes = StepCounter.calculateMagnitudesFor(sensorData);
 		double[] stepThreshold = CalculateThresholdOfNSections(sensorData, n);
+		
 		for (int i = 0; i < magnitudes.length - 1; i++) {
 			double firstValue = magnitudes[i];
 			double secondValue = magnitudes[i + 1];
-			if (firstValue < secondValue && firstValue < stepThreshold[] && secondValue > stepThreshold[]) {
+			if (firstValue < secondValue && firstValue < stepThreshold[i] && secondValue > stepThreshold[i]) {
 				StepsCounted++;
 			}
 		}
@@ -142,5 +143,13 @@ public class Sectioning {
 }
 	public static void EliminateSections(double[][] sensorData, int n){
 		// if close to mean value, eliminate section from being counted
+		double[] arr = NSectionsByArrayParts(sensorData, n);
+		double[] arrThreshold = CalculateThresholdOfNSections(sensorData, n);
+		for (int i = 0; i < arr.length; i++){
+			if(arrThreshold[i] <= StepCounter.calculateMean(arr) + 1){
+			arr[i] = arr[i+1];
+			
+			}
+		}
 	}
 }
