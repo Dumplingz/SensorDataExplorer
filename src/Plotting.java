@@ -22,7 +22,7 @@ public class Plotting {
 
 		// double[][] graph = ArrayHelper.combineAsColumns(time, magnitudes,
 		// thresholds);
-		System.out.println(GyroCounter.countSteps(sample1));
+		System.out.println(GyroCounter.countSteps(sample1,5));
 
 		
 		double[][] graph = ArrayHelper.combineAsColumns(time, zGyroData, thresholds);

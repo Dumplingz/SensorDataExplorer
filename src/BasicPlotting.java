@@ -4,34 +4,40 @@ import javax.swing.JFrame;
 import org.math.plot.Plot2DPanel;
 
 public class BasicPlotting {
-	public static String datafile = "data/Trial8.csv";
+	public static String datafile = "data/64StepsWalking1Male.csv";
 
 	public static void main(String[] args) {
 		CSVData data = CSVData.readCSVFile(datafile, 1);
 
-		double[][] sample1 = data.getColumns(new String[] { "gyroRotationX", "gyroRotationY", "gyroRotationZ" });
+		double[][] sample1 = data.getColumns(new String[] {"accelerometerAccelerationX", "accelerometerAccelerationY","accelerometerAccelerationZ", "gyroRotationX", "gyroRotationY", "gyroRotationZ" });
+		int zGyroColumn = 5;
 
+		double[][] accelerations = ArrayHelper.extractColumns(sample1, 0, 3);
+		double[] magnitudes = StepCounter.calculateMagnitudesFor(accelerations);
+		
+		double[] xAcceleration = ArrayHelper.extractColumn(sample1, 0);
+		
 		double[] time = data.getColumn(0);
-		double[] xGyroData = ArrayHelper.extractColumn(sample1, 2);
-		double threshold = StepCounter.calculateThreshold(xGyroData, false);
-		double[] thresholds = new double[xGyroData.length];
+		double[] zGyroData = ArrayHelper.extractColumn(sample1, zGyroColumn);
+		double threshold = StepCounter.calculateThreshold(magnitudes, false);
+		double[] thresholds = new double[magnitudes.length];
 		for (int i = 0; i < thresholds.length; i++) {
 			thresholds[i] = threshold;
 		}
 
 		// double[][] graph = ArrayHelper.combineAsColumns(time, magnitudes,
 		// thresholds);
-		System.out.println(GyroCounter.countSteps(sample1));
+		System.out.println(StepCounter.countSteps(accelerations));
 
 		Plot2DPanel plot = new Plot2DPanel();
 
 		// add a line plot to the PlotPanel
-		// plot.addLinePlot("Magnitudes", A rrayHelper.extractColumn(sample1,
+		// plot.addLinePlot("Magnitudes", ArrayHelper.extractColumn(sample1,
 		// 0));
 		// plot.addLinePlot("Magnitudes", ArrayHelper.extractColumn(sample1,
 		// 1));
-		plot.addLinePlot("Magnitudes", ArrayHelper.extractColumn(sample1, 2));
-
+		plot.addLinePlot("Gyro", zGyroData);
+		plot.addLinePlot("Magnitudes", magnitudes);
 		plot.addLinePlot("Threshold", thresholds);
 
 		// put the PlotPanel in a JFrame, as a JPanel
