@@ -11,12 +11,12 @@ public class GyroCounter {
 	 * @return the number of steps walked
 	 */
 	public static int countSteps(double[][] gyroData, int columnToCount) {
-		double[] xGyroData = ArrayHelper.extractColumn(gyroData, columnToCount);
+		double[] gyroDataColumn = ArrayHelper.extractColumn(gyroData, columnToCount);
 		int timesPassedStandardDeviation = 0;
-		double stepThreshold = StepCounter.calculateThreshold(xGyroData, false);
-		for (int i = 0; i < xGyroData.length - 1; i++) {
-			double firstValue = xGyroData[i];
-			double secondValue = xGyroData[i + 1];
+		double stepThreshold = StepCounter.calculateThreshold(gyroDataColumn, false);
+		for (int i = 0; i < gyroDataColumn.length - 1; i++) {
+			double firstValue = gyroDataColumn[i];
+			double secondValue = gyroDataColumn[i + 1];
 			if (firstValue < stepThreshold && secondValue > stepThreshold) {
 				timesPassedStandardDeviation++;
 			}
@@ -24,4 +24,16 @@ public class GyroCounter {
 		return timesPassedStandardDeviation * 2;
 	}
 
+	public static int countSteps(double[] gyroData) {
+		int timesPassedStandardDeviation = 0;
+		double stepThreshold = StepCounter.calculateThreshold(gyroData, false);
+		for (int i = 0; i < gyroData.length - 1; i++) {
+			double firstValue = gyroData[i];
+			double secondValue = gyroData[i + 1];
+			if (firstValue < stepThreshold && secondValue > stepThreshold) {
+				timesPassedStandardDeviation++;
+			}
+		}
+		return timesPassedStandardDeviation * 2;
+	}
 }
