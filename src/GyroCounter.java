@@ -1,5 +1,7 @@
 
 public class GyroCounter {
+	
+	private static final int STEP_MULTIPLIER = 2;
 	/***
 	 * Finds, using standard deviation, the number of steps walked given (x,y,z)
 	 * vectors of acceleration.
@@ -25,6 +27,6 @@ public class GyroCounter {
 				timesPassedStandardDeviation++;
 			}
 		}
-		return timesPassedStandardDeviation * 2;
+		return timesPassedStandardDeviation * STEP_MULTIPLIER;
 	}
 }
