@@ -12,16 +12,7 @@ public class GyroCounter {
 	 */
 	public static int countSteps(double[][] gyroData, int columnToCount) {
 		double[] gyroDataColumn = ArrayHelper.extractColumn(gyroData, columnToCount);
-		int timesPassedStandardDeviation = 0;
-		double stepThreshold = StepCounter.calculateThreshold(gyroDataColumn, false);
-		for (int i = 0; i < gyroDataColumn.length - 1; i++) {
-			double firstValue = gyroDataColumn[i];
-			double secondValue = gyroDataColumn[i + 1];
-			if (firstValue < stepThreshold && secondValue > stepThreshold) {
-				timesPassedStandardDeviation++;
-			}
-		}
-		return timesPassedStandardDeviation * 2;
+		return countSteps(gyroDataColumn);
 	}
 
 	public static int countSteps(double[] gyroData) {
